@@ -12,51 +12,50 @@ import sys
 
 
 class JiebaTokenizer:
-    def __init__(self, stop_words_path, mode):
-        self.stopword_dict = {}
-        # load stopword_dict
+    def __init__(self, stop_words_path, mode='s'):
+        self.stopword_set = set()
+        # load stopwords
         with open(stop_words_path) as ins:
-            for line in ins.readlines():
-                self.stopword_dict[line.strip().decode('utf8')] = 1
+            for line in ins:
+                self.stopword_set.add(line.strip().decode('utf8'))
         self.mode = mode
 
-    def _run(self, intext):
+    def tokens(self, intext):
         intext = u' '.join(intext.split())
         if self.mode == 's':
             token_list = jieba.cut_for_search(intext)
         else:
             token_list = jieba.cut(intext)
-        # print list(token_list)
-        # self.tokens_list = list(token_list)
-        # print self.tokens_list
-        return [token for token in token_list if token.strip() != '' and not token in self.stopword_dict]
-        # return list(token_list)
-
-    def tokens(self, intext):
-        # if self.token_list == []:
-        return self._run(intext)
+        return [token for token in token_list if token.strip() != u'' and not token in self.stopword_set]
 
 
-def token_single_file(inputfile, outputfile):
+def token_single_file(input_fname, output_fname):
     result_lines = []
-    with open(inputfile) as ins:
-        for line in ins.readlines():
+    with open(input_fname) as ins:
+        for line in ins:
             line = line.strip().decode('utf8')
             tokens = jt.tokens(line)
-            result_lines.append(' '.join(tokens).encode('utf8'))
-    open(outputfile, 'w').write(os.linesep.join(result_lines))
-    print 'Wrote to ', outputfile
+            result_lines.append(u' '.join(tokens).encode('utf8'))
+    open(output_fname, 'w').write(os.linesep.join(result_lines))
+    print 'Wrote to ', output_fname
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 6 or not sys.argv[4] in ['c', 's']:
-        print "Usage:\ttokens.py -s/-m <inputfile/inputfolder> <outputfile/outputfolder> <mode(c/s)> <stopword.list>"
+    if len(sys.argv) < 6 or sys.argv[1] not in ['-s', '-m'] or sys.argv[4] not in ['c', 's']:
+        print "Usage:\ttokens.py <file_mode(-s/-m)> <input_file/input_folder> " \
+              "<output_file/output_folder> <cut_mode(c/s)> <stopword.list>"
+        print "file_mode:\t-s:\tsingle file"
+        print "\t\t-m:\tmultiple files"
+        print "cut_mode:\tc:\tnormal mode of Jieba"
+        print "\t\ts:\tcut_for_search mode of Jieba"
         exit(-1)
-    jt = JiebaTokenizer(sys.argv[5], sys.argv[4])
-    # extract tokens and filter by stopword_dict
-    if (sys.argv[1] == '-s'):
-        token_single_file(sys.argv[2], sys.argv[3])
-    elif (sys.argv[1] == '-m'):
-        for inputfile in os.listdir(sys.argv[2]):
-            token_single_file(os.path.join(sys.argv[2], inputfile),
-                              os.path.join(sys.argv[3], inputfile.replace('.ori', '.token')))
+    file_mode, input_filepath, output_filepath, cut_mode, stopword_file = sys.argv[1:]
+    jt = JiebaTokenizer(stopword_file, cut_mode)
+    # extract tokens and filter by stopwords
+    if file_mode == '-s':
+        token_single_file(input_filepath, output_filepath)
+    elif file_mode == '-m':
+        for input_file in os.listdir(input_filepath):
+            prefix = input_file.rsplit(os.sep, 1)[0]
+            token_single_file(os.path.join(input_filepath, input_file),
+                              os.path.join(output_filepath, prefix+'.token'))
