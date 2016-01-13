@@ -42,11 +42,11 @@ OUTPUT: 将分词结果保存到.token中，并更新特征词典文件
 
 usage:
 
-	scripts/preprocess.py <*.ori> <stopword_path> <word_dict>
+	src/preprocess.py <*.ori> <stopword_path> <word_dict>
 
 e.g.
 
-	scripts/preprocess.py data/temp/doc1.ori data/stopwords.txt data/word.dict
+	src/preprocess.py data/temp/doc1.ori data/stopwords.txt data/word.dict
 
 {Note: 需对待比较的两个文档分别运行一次, i.e. 两个文档的分词结果都应添加到特征词典中}
 
@@ -61,13 +61,13 @@ OUTPUT: 输出两篇文档是否重复及相似度
 
 usage:
 
-	scripts/isSimilar.py <doc1> <doc2> <stopword_path> <word_dict> <-c/-s> <threshold>
+	src/isSimilar.py <doc1> <doc2> <stopword_path> <word_dict> <-c/-s> <threshold>
 
 	-c/-s	选择采用VSM+CosineDistance或是Simhash+HammingDistance方法进行重复判断
 
 e.g.
 
-	scripts/isSimilar.py data/temp/doc1.ori data/temp/doc2.ori data/stopwords.txt data/word.dict -c 0.8
+	src/isSimilar.py data/temp/doc1.ori data/temp/doc2.ori data/stopwords.txt data/word.dict -c 0.8
 
 
 ## 详细处理流程（单步）
@@ -82,11 +82,11 @@ OUTPUT: 去噪后的文本 (.ori)
 
 usage:
 
-	scripts/webcontent_filter.sh <*.content> <*.ori>
+	src/webcontent_filter.sh <*.content> <*.ori>
 	
 e.g.
 
-	scripts/webcontent-filter.sh data/temp/all.content data/temp/all.ori
+	src/webcontent-filter.sh data/temp/all.content data/temp/all.ori
 	
 
 ### 预处理
@@ -117,7 +117,7 @@ usage:
 
 e.g.
 
-	scripts/tokens.py  -s  data/temp/all.ori data/temp/all.token c data/stopwords.txt 
+	src/tokens.py  -s  data/temp/all.ori data/temp/all.token c data/stopwords.txt 
 
 
 #### 生成特征词典 (DictBuilder.py)
@@ -130,11 +130,11 @@ OUTPUT:生成的特征词典，词典格式如下：ID + 特征词 + 词频
 
 usage:
 
-	scripts/DictBuilder.py <input_folder/*.token> <output_file>
+	src/DictBuilder.py <input_folder/*.token> <output_file>
 
 e.g.
 
-	scripts/DictBuilder.py data/temp/all.token data/temp/word.dict
+	src/DictBuilder.py data/temp/all.token data/temp/word.dict
 
 
 #### 生成特征向量 (features.py)
@@ -147,13 +147,13 @@ OUTPUT: 以行为单位生成各文档的特征向量：id1:nonzero-tf id2:nonze
 
 usage:
 
-	scripts/feature.py -s/-m <word_dict_path> <tokens_file/tokens_folder> <feature_file/feature_folder>
+	src/feature.py -s/-m <word_dict_path> <tokens_file/tokens_folder> <feature_file/feature_folder>
 
 	-s[single]/-m[multiple]  对单个分词文件 (*.token) 或对分词文件目录生成特征向量
 	
 e.g.
 
-	scripts/feature.py -s data/temp/word.dict data/temp/all.token data/temp/all.feat
+	src/feature.py -s data/temp/word.dict data/temp/all.token data/temp/all.feat
 
 
 #### 生成Simhash指纹 (simhash-imp.py)
@@ -166,8 +166,8 @@ OUTPUT: 信息指纹文件
 
 usage:
 
-	scripts/simhash_imp.py <word_dict_path> <*.feat> <*.fprint>
+	src/simhash_imp.py <word_dict_path> <*.feat> <*.fprint>
 
 e.g.
 
-	scripts/simhash-imp.py data/temp/word.dict data/temp/all.feat data/temp/all.fprint
+	src/simhash-imp.py data/temp/word.dict data/temp/all.feat data/temp/all.fprint
