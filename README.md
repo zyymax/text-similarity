@@ -4,6 +4,11 @@ By max.zhang@2013-11-06
 
 说明：本项目为python语言实现的文本相似度检测工具
 
+# 环境依赖
+*	python
+*	python-jieba
+*	bash
+
 # 目录说明
 data 文件夹
 
@@ -156,7 +161,7 @@ e.g.
 	src/feature.py -s data/temp/word.dict data/temp/all.token data/temp/all.feat
 
 
-#### 生成Simhash指纹 (simhash-imp.py)
+#### 生成Simhash指纹 (simhash_imp.py)
 
 brief: 根据分词结果和特征词典，生成信息指纹文件
 
@@ -170,4 +175,4 @@ usage:
 
 e.g.
 
-	src/simhash-imp.py data/temp/word.dict data/temp/all.feat data/temp/all.fprint
+	src/simhash_imp.py data/temp/word.dict data/temp/all.feat data/temp/all.fprint
