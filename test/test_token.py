@@ -7,6 +7,8 @@ Created on 20150825
 @brief: unit test of src/tokens.py
 '''
 import unittest
+import sys
+sys.path.append('..')
 from src.tokens import JiebaTokenizer
 
 
@@ -30,4 +32,5 @@ class JiebaTokenizerTestCase(unittest.TestCase):
                       u"中是/TestSuite/类来/表示"
         self.assertEqual(tokens_text, u'/'.join(self.jt.tokens(in_text)), "Tokenization Results differ")
 
-tc = JiebaTokenizerTestCase("testTokens")
+if __name__ == "__main__":
+    unittest.main()

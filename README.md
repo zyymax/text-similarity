@@ -176,3 +176,8 @@ usage:
 e.g.
 
 	src/simhash_imp.py data/temp/word.dict data/temp/all.feat data/temp/all.fprint
+
+## 单元测试
+
+    cd test
+    python test_token.py
