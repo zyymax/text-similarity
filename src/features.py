@@ -41,7 +41,7 @@ def feature_single(inputfile, outputfile):
         for lineidx, line in enumerate(ins.readlines()):
             feature = fb.compute([token.decode('utf8') for token in line.strip().split()])
             l = []
-            for idx,f in enumerate(feature):
+            for idx,f in feature:
                 if f > 1e-6:
                     l.append('%s:%s' %(idx,f))
             result_lines.append(' '.join(l) + os.linesep)
